@@ -13,11 +13,10 @@ function tokenommics() {
                 Token Supply
               </p>
               <p className="block mt-1 text-xl leading-tight font-bold text-[#919ac9] ">
-                420,690,000,000,000
+                2,000,000,000
               </p>
               <p className="mt-10 p-4 font-sans border-4 text rounded-tr-[40px] rounded-bl-[40px] text-black">
-                No Taxes, No Bullshit. It’s that simple <br className="mt-2" />
-                LP tokens are burnt, and contract ownership is renounced.
+                No Taxes, No scamming peoples Transactions 
               </p>
             </div>
             <div className="md:flex-1 md:shrink-0">
