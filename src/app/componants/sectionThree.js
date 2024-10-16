@@ -34,7 +34,7 @@ export default function SectionThree() {
             </div>
           </div>
         </div>
-        {/* Get Some USDT */}
+        {/* Get Some ETH */}
         <div className="m-4 max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
           <div className="md:flex">
             <div className="md:shrink-0">
@@ -45,7 +45,7 @@ export default function SectionThree() {
             </div>
             <div className="p-8">
               <div className="uppercase tracking-wider text-3xl text-black font-semibold font-custom2">
-                Get Some USDT
+                Get Some ETH
               </div>
               <a
                 href="#"
@@ -54,8 +54,8 @@ export default function SectionThree() {
                 Have some Eth to pay gas fee
               </a>
               <p className="mt-2 font-sans text-black">
-                You must have USDT & some Eth in your wallet to switch to
-                $Gonzo. If you don’t have any ETH & USDT, you can buy directly
+                You must have ETH & some Eth in your wallet to switch to
+                $Gonzo. If you don’t have any ETH & ETH, you can buy directly
                 on metamask, transfer from another wallet, or buy on another
                 exchange and send it to your wallet.
               </p>
@@ -73,13 +73,13 @@ export default function SectionThree() {
             </div>
             <div className="p-8">
               <div className="uppercase tracking-wider text-3xl text-black font-semibold font-custom2">
-                Swtich USDT to Gonzo
+                Swtich ETH to Gonzo
               </div>
               <a
                 href="#"
                 className="block mt-1 text-lg leading-tight font-medium text-[#919ac9] hover:underline"
               >
-                Incredible Buy with USDT in Fixed Rates
+                Incredible Buy with ETH in Fixed Rates
               </a>
               <p className="mt-2 font-sans text-black">
                 Looking to take your team away on a retreat to enjoy awesome
