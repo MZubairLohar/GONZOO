@@ -36,12 +36,13 @@ export default function lastSection() {
           <div className="md:flex">
             <div className="p-8 md:flex-1">
               <p className="uppercase tracking-wider text-2xl text-black font-semibold font-custom2">
-                $pepe coin has no association with Matt Furie or his creation
-                Pepe the Frog. This token is simply paying homage to a meme we
-                all love and recognize.
+                Gonzo coin has no association with David Goetz , Jim Henson & Jerry Juhl or his creation
+                Gonzo. 
+                //   This token is simply paying homage to a meme we
+                // all love and recognize.
               </p>
               <p className=" mt-4 uppercase tracking-wider text-2xl text-black font-semibold font-custom2">
-                $PEPE is a meme coin with no intrinsic value or expectation of
+                Gonzo is a meme coin with no intrinsic value or expectation of
                 financial return. There is no formal team or roadmap. the coin
                 is completely useless and for entertainment purposes only.
               </p>
