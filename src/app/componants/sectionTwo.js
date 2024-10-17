@@ -16,8 +16,8 @@ export default function SectionTwo () {
                         About Gonzo
                     </h1>
                     <p class="text-base sm:leading-relaxed md:text-2xl text-black">
-                        Gonzo is coming off the bench to show the people how the game is really played! All of the Inus and other memes don’t stand a chance on our pitch. Gonzo Token is here at last and head to the top of the ranks. Presale coming soon with the token that has “0” taxes, The contract that renounced with all of opportunity that you can imagine. The power of Gonzo will be felt in shown though it’s up coming success.
-                    </p>
+                    Gonzo is coming off the bench to show the people how the game is really played! All of the Inus and other memes don’t stand a chance on our pitch. Gonzo Token is here at last and headed to the top of the ranks. Presale coming soon with the token that has “0” taxes, the contract is renounced with all the opportunity that you can imagine. The power of Gonzo will be felt and shown through its upcoming success.
+                      </p>
                     <footer class="flex items-center space-x-4 md:space-x-0">
                         <img class="w-12 h-12 rounded-full md:hidden" src="https://i.pinimg.com/564x/54/23/84/5423848a755f9ad8303485f1fbefcd40.jpg" />
                     </footer>
