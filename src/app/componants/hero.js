@@ -53,8 +53,7 @@ export default function Hero() {
                   </span>
                 </h1>
                 <p className="mx-auto text-base font-sans font-extrabold text-black sm:max-w-md lg:text-xl md:max-w-3xl">
-                  Hodl it to Get Rich. Introducing Treasure of Gonzo, the most
-                  meme-worthy memecoin in the galaxy. We allowed everyone to shoot their shoot but now its time for Gonzo to show the world who is the greatest meme coin that ever existed!
+                 Hodl it to Get Rich. Introducing Treasure of Gonzo, the most meme-worthy memecoin in the galaxy. We allowed everyone to shoot their shot, but now its time for Gonzo to show the world who is the greatest meme coin that ever existed!
                 </p>
                 <div className="relative flex flex-col sm:flex-row sm:space-x-4">
                   <a
