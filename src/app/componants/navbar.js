@@ -2,46 +2,66 @@
 import { useState } from "react";
 import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 import Link from "next/link";
+import Web3Modal from "web3modal";
+import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
+import { WalletConnect } from "@web3-react/walletconnect";
+("@web3-react/walletconnect");
+const ethers = require("ethers");
 
-import {
-  ConnectButton,
-  useActiveAccount,
-  useActiveWallet,
-  useConnect,
-} from "thirdweb/react";
-import { createWallet } from "thirdweb/wallets";
-// import { bscTestnet, ethereum, fantomTestnet, sepolia } from "thirdweb/chains";
-// import { createThirdwebClient } from "thirdweb";
-import client from "../lib/client";
-// import dynamic from 'next/dynamic';
+const providerOptions = {
+  coinbasewallet: {
+    package: CoinbaseWalletSDK,
+    options: {
+      appName: "Web3Model Demo",
+      infuraId: "https://rpc.testnet.fantom.network",
+    },
+  },
+  walletconnect: {
+    package: WalletConnect,
+    options: {
+      rpc: {
+        4002: "https://rpc.testnet.fantom.network", // Chain ID for Fantom Testnet
+      },
+      network: "fantom testnet", // Optional
+      qrcode: true, // Enable QR code for mobile wallets
+    },
+  },
+};
 
-// const client = createThirdwebClient({
-//     // clientId: "d75935c2db33dd391882dd2fb2474ceb",
-//     secretKey: "pombZa3yC3A4Fg9ru-JZQEVLafqnNlXtT02hNZwMGCzKkEHhuu8bnwaYB_foKOL9lawTodKxi24oaW4_3MzW3Q"
-// });
-
-const wallets = [
-  createWallet("io.metamask"),
-  createWallet("com.coinbase.wallet"),
-  createWallet("me.rainbow"),
-  createWallet("io.rabby"),
-  createWallet("io.zerion.wallet"),
-  createWallet("com.binance"),
-  createWallet("com.trustwallet.app"),
-  createWallet("com.safepal"),
-  createWallet("com.kraken"),
-];
-
+let theme = {
+  background: "#202020", // Modal background color
+  main: "#ffffff", // Main text color
+  secondary: "#a0a0a0", // Secondary text color
+  border: "1px solid #ffffff", // Border style for modal
+  hover: "#f0f0f0", // Hover state color
+};
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  // const { connect, isConnecting, error } = useConnect();
-  const [selectedWalletId, setSelectedWalletId] = useState();
-  // const account = useActiveAccount();
-  // const connectedWallet = useActiveWallet();
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
+  const [web3Provider, setWeb3Provider] = useState(null);
 
+  async function connectWallet() {
+    try {
+      let web3Modal = new Web3Modal({
+        cacheProvider: false,
+        providerOptions,
+        theme,
+      });
+
+      const web3modalInstance = await web3Modal.connect();
+      const web3modalProvider = new ethers.providers.Web3Provider(
+        web3modalInstance
+      );
+      // console.log(web3modalProvider);
+      if (web3modalProvider) {
+        setWeb3Provider(web3modalProvider);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <nav className="bg-white lightbg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200  drop-shadow-xl lightborder-gray-600 font-custom">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -61,23 +81,6 @@ export default function Navbar() {
           </a>
         </Link>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          {/* <ConnectButton
-            client={client}
-            wallets={wallets}
-            theme={"light"}  
-            connectButton={{ label: "Connect Wallet" }}
-            connectModal={{
-              size: "compact",
-              title: "Connect Wallet",
-              titleIcon:
-                "https://i.pinimg.com/originals/25/ac/28/25ac28d0d4e297348c00ccc5285339ed.png",
-              showThirdwebBranding: false,
-            }}
-            // accountAbstraction={{
-            //     chain: fantomTestnet, // replace with the chain you want
-            //     sponsorGas: true,
-            // }}
-          /> */}
           <button
             onClick={toggleNavbar}
             type="button"
@@ -175,7 +178,15 @@ export default function Navbar() {
             <li>
               <Link href="/trade" legacyBehavior>
                 <a className="block py-2 px-3 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
-                  Buy
+                  {web3Provider == null ? (
+                    <button className="" onClick={connectWallet}>
+                      Buy
+                    </button>
+                  ) : (
+                    <div>
+                      <p>Connected</p>
+                    </div>
+                  )}
                 </a>
               </Link>
             </li>
