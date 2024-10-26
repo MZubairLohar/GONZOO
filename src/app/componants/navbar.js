@@ -177,7 +177,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link href="/trade" legacyBehavior>
-                {/* <a className="block py-2 px-3 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
+                 <a className="block py-2 px-3 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
                   {web3Provider == null ? (
                     <button className="" onClick={connectWallet}>
                       Buy
@@ -187,11 +187,8 @@ export default function Navbar() {
                       <p>Connected</p>
                     </div>
                   )}
-                </a> */}
-                                 <a className="block py-2 px-3 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
-
-                Buy
-                </a>
+                </a> 
+              
               </Link>
             </li>
           </ul>
