@@ -1,13 +1,594 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
-import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Web3Modal from "web3modal";
+import { ethers } from "ethers";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import { WalletConnect } from "@web3-react/walletconnect";
 ("@web3-react/walletconnect");
-const ethers = require("ethers");
+const usdtABI = [
+  {
+    inputs: [{ internalType: "address", name: "_owner", type: "address" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "_decimals",
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "_name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "_symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
+    ],
+    name: "allowance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+    name: "burn",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "decimals",
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "subtractedValue", type: "uint256" },
+    ],
+    name: "decreaseAllowance",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "getOwner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "addedValue", type: "uint256" },
+    ],
+    name: "increaseAllowance",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+    name: "mint",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [{ internalType: "address", name: "_newOwner", type: "address" }],
+    name: "renounceOwnership",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "totalSupply",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      { internalType: "address", name: "recipient", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "transfer",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      { internalType: "address", name: "sender", type: "address" },
+      { internalType: "address", name: "recipient", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
+    name: "transferFrom",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+const stakingABI = [
+  {
+    inputs: [{ internalType: "address", name: "admin_", type: "address" }],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [{ internalType: "address", name: "approver", type: "address" }],
+    name: "ERC20BlackListedApprover",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "receiver", type: "address" }],
+    name: "ERC20BlackListedReceiver",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "sender", type: "address" }],
+    name: "ERC20BlackListedSender",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "spender", type: "address" }],
+    name: "ERC20BlackListedSpender",
+    type: "error",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "allowance", type: "uint256" },
+      { internalType: "uint256", name: "needed", type: "uint256" },
+    ],
+    name: "ERC20InsufficientAllowance",
+    type: "error",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "sender", type: "address" },
+      { internalType: "uint256", name: "balance", type: "uint256" },
+      { internalType: "uint256", name: "needed", type: "uint256" },
+    ],
+    name: "ERC20InsufficientBalance",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "approver", type: "address" }],
+    name: "ERC20InvalidApprover",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "receiver", type: "address" }],
+    name: "ERC20InvalidReceiver",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "sender", type: "address" }],
+    name: "ERC20InvalidSender",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "spender", type: "address" }],
+    name: "ERC20InvalidSpender",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "spender", type: "address" },
+    ],
+    name: "allowance",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "spender", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+    ],
+    name: "transfer",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "value", type: "uint256" },
+    ],
+    name: "transferFrom",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+const preSaleABI = [
+  {
+    inputs: [
+      { internalType: "contract IERC20", name: "__USDT", type: "address" },
+      { internalType: "contract IERC20", name: "__GentTop", type: "address" },
+      { internalType: "address", name: "_staking", type: "address" },
+      { internalType: "address", name: "_owner", type: "address" },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "BronzePercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_usdtAmount", type: "uint256" },
+      { internalType: "address", name: "_buyer", type: "address" },
+      { internalType: "uint256", name: "_runner", type: "uint256" },
+    ],
+    name: "Buy",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "GoldPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "SilverPercentage",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    name: "User",
+    outputs: [
+      { internalType: "address", name: "userAdd", type: "address" },
+      { internalType: "uint256", name: "joinTime", type: "uint256" },
+      { internalType: "uint256", name: "joiningAmount", type: "uint256" },
+      { internalType: "uint256", name: "percenTage", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "__user", type: "address" }],
+    name: "UserPurcahases",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "buyer",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_userAdd", type: "address" },
+      { internalType: "uint256", name: "_num", type: "uint256" },
+    ],
+    name: "getUserData",
+    outputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "_percentage", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "_whichTypeOfPercentage",
+        type: "uint256",
+      },
+    ],
+    name: "setPercentage",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "staking",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "userPurcahases",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdrawAdmin",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+const usdtAddress = "0xB3e6AE901b927F76C6E8b24a0c5B2a6511f5067F"; // Replace with Contract 1 address
+const gentopAddress = "0xa5F286f59869E6090Ee1Fa36b9B628FFF9e98F2e"; // Replace with Contract 2 address
+const stakingContractAddress = "0x416B3FC8805a7A3D3F4e77B78561261DC4F0770C"; // Replace with Contract 3 address
+const preSaleContractAddress = "0x438E9efB39fC6903226809272e155baCdAB34EfF"; // Replace with Contract 4 address
 
 const providerOptions = {
   coinbasewallet: {
@@ -17,249 +598,313 @@ const providerOptions = {
       infuraId: "https://rpc.testnet.fantom.network",
     },
   },
-  walletconnect: {
-    package: WalletConnect,
-    options: {
-      rpc: {
-        4002: "https://rpc.testnet.fantom.network", // Chain ID for Fantom Testnet
-      },
-      network: "fantom testnet", // Optional
-      qrcode: true, // Enable QR code for mobile wallets
-    },
-  },
 };
-
-let theme = {
-  background: "#202020", // Modal background color
-  main: "#ffffff", // Main text color
-  secondary: "#a0a0a0", // Secondary text color
-  border: "1px solid #ffffff", // Border style for modal
-  hover: "#f0f0f0", // Hover state color
-};
-
-
 
 export default function Trade() {
-  
+  const [selectedOption, setSelectedOption] = useState("1");
   const [web3Provider, setWeb3Provider] = useState(null);
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [usdtBalance, setUsdtBalance] = useState(null);
+  const [usdtAmount, setUsdtAmount] = useState(null);
+
+  const [transactionHash, setTransactionHash] = useState(null);
+  const [contract1, setContract1] = useState(null);
+  const [contract2, setContract2] = useState(null);
+  const [contract3, setContract3] = useState(null);
+  const [contract4, setContract4] = useState(null);
+
+  function getSelectedRunner() {
+    const runner = parseInt(selectedOption, 10);
+
+    if (runner < 1 || runner > 3) {
+      throw new Error("Invalid runner selection");
+    }
+    return runner;
+  }
+
+  const formatAddress = (address) => {
+    return `${address.slice(0, 4)}...${address.slice(-4)}`;
+  };
 
   async function connectWallet() {
     try {
       let web3Modal = new Web3Modal({
         cacheProvider: false,
         providerOptions,
-        theme,
       });
 
       const web3modalInstance = await web3Modal.connect();
       const web3modalProvider = new ethers.providers.Web3Provider(
         web3modalInstance
       );
-      // console.log(web3modalProvider);
+      console.log(web3modalProvider);
+
       if (web3modalProvider) {
+        const signer = web3modalProvider.getSigner();
+        const address = await signer.getAddress();
+        setWalletAddress(address);
         setWeb3Provider(web3modalProvider);
+        const usdtContract = new ethers.Contract(usdtAddress, usdtABI, signer);
+        const balance = await usdtContract.balanceOf(address);
+        console.log(balance);
+        const decimals = 18;
+        setUsdtBalance(ethers.utils.formatUnits(balance, decimals));
+        await fetchUsdtBalance();
       }
     } catch (error) {
       console.log(error);
     }
   }
+  async function fetchUsdtBalance(signer, address) {
+    try {
+      const usdtContract = new ethers.Contract(usdtAddress, usdtABI, signer);
+      const balance = await usdtContract.balanceOf(address);
+      console.log(balance);
+      const decimals = 18;
+      setUsdtBalance(ethers.utils.formatUnits(balance, 6));
+    } catch (error) {
+      console.error("Error fetching USDT balance:", error);
+    }
+  }
 
-  
+  useEffect(() => {
+    if (walletAddress && web3Provider) {
+      const signer = web3Provider.getSigner();
+
+      const balanceInterval = setInterval(() => {
+        fetchUsdtBalance(signer, walletAddress);
+      }, 100000); // Fetch balance every 10 seconds
+
+      return () => clearInterval(balanceInterval);
+    }
+  }, [walletAddress, web3Provider]);
+  function convertTo18Decimals(usdtValue) {
+    const decimals = 18;
+    return ethers.utils.parseUnits(usdtValue, decimals);
+  }
+
+  async function approveUSDT() {
+    if (!web3Provider || !walletAddress) {
+      console.log("No provider or wallet connected");
+      return;
+    }
+
+    try {
+      const signer = web3Provider.getSigner();
+      const usdtContract = new ethers.Contract(usdtAddress, usdtABI, signer);
+
+      const amountToApprove = convertTo18Decimals(usdtAmount);
+
+      const tx = await usdtContract.approve(
+        preSaleContractAddress,
+        amountToApprove
+      );
+      console.log("Approval transaction hash:", tx.hash);
+      setTransactionHash(tx.hash); // Store transaction hash
+
+      // Wait for transaction to be confirmed
+      await tx.wait();
+      toast.success("USDT successfully approved!");
+    } catch (error) {
+      console.log("Error approving USDT:", error);
+      toast.error("Error approving USDT. Please try again.");
+    }
+  }
+
+  async function buyTokens() {
+    if (!web3Provider || !walletAddress) {
+      console.log("No provider or wallet connected");
+      return;
+    }
+
+    try {
+      const signer = web3Provider.getSigner();
+      const preSaleContract = new ethers.Contract(
+        preSaleContractAddress,
+        preSaleABI,
+        signer
+      );
+
+      // Define the values you want to send
+      const amountToBuy = convertTo18Decimals(usdtAmount); // Adjust to the correct amount of USDT
+      const buyerAddress = walletAddress;
+      const runner = selectedOption; // You can replace this with the actual value if needed
+      console.log(runner);
+      // // Estimate gas limit for the Buy transaction
+
+      // Call the Buy function
+      const tx = await preSaleContract.Buy(amountToBuy, walletAddress, runner, {
+        gasLimit: 10000000,
+      });
+      console.log(amountToBuy, buyerAddress, runner);
+
+      console.log("Transaction: ", tx);
+      // setTransactionHash(tx.hash);
+
+      toast.success("Tokens purchased successfully!");
+    } catch (error) {
+      console.log("Error purchasing tokens:", error);
+      toast.error("Error during token purchase. Please try again.");
+    }
+  }
+
   return (
-    <section>
-     <nav className="bg-white lightbg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200  drop-shadow-xl lightborder-gray-600 font-custom">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link href="/" legacyBehavior>
+    <div>
+      <nav className=" bg-[#14000b] font-san fixed w-full z-20 top-0 start-0 border-b ">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
-            href="/"
+            href="https://flowbite.com/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <img
-              src="https://i.pinimg.com/originals/25/ac/28/25ac28d0d4e297348c00ccc5285339ed.png"
-              className="h-12"
-              alt="Logo"
-            />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap lighttext-white tracking-wider text-[#026c9e]">
-              Great Gonzo
+            <Link href="/">
+              <Image
+                src="/logo1.png"
+                width={10000}
+                height={10000}
+                alt="Logo"
+                className="h-16 w-16"
+              />
+            </Link>
+            <span className="self-center text-2xl font-semibold text-white">
+              Gentop
             </span>
           </a>
-        </Link>
-        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          <button
-            // onClick={toggleNavbar}
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 lighttext-gray-400 lighthover:bg-gray-700 lightfocus:ring-gray-600"
-            aria-controls="navbar-sticky"
-            // aria-expanded={isOpen}
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
+          {/* <ToastContainer position="top-right" autoClose={50000} /> */}
+
+          <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            <Link
+              href="/trade"
+              className="text-white bg-[#14000b] border border-white hover:bg-transparent focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-8 py-2 text-center "
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          </button>
-        </div>
-        <div
-        //  className={`items-center justify-between 
-        //  ${isOpen ? "flex" : "hidden" }
-        //        w-full md:flex md:w-auto md:order-1`}
-
-        //   id="navbar-sticky"
-        // >
-        className={`items-center justify-between 
-        
-               w-full md:flex md:w-auto md:order-1`}
-
-          id="navbar-sticky"
-        >
-          <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium tracking-wider border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white lightbg-gray-800 md:lightbg-gray-900 lightborder-gray-700">
-            <li>
-              <Link href="/" legacyBehavior>
-                <a
-                  className="block py-2 px-3 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700"
-                  aria-current="page"
-                >
+              {web3Provider == null ? (
+                <button className="" onClick={connectWallet}>
+                  connect Wallet{" "}
+                </button>
+              ) : (
+                <div>
+                  {/* <p>Connected</p> */}
+                  {walletAddress ? formatAddress(walletAddress) : ""}
+                </div>
+              )}
+            </Link>
+          </div>
+          <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 text-white text-xl rounded-lg bg-[#14000b] md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+              <li>
+                <a href="/" className="block py-3 px-3 " aria-current="page">
                   Home
                 </a>
-              </Link>
-            </li>
-            <li>
-              <ScrollLink
-                to="sectionTwo" // This should match the ID of the element you want to scroll to
-                smooth={true}
-                duration={600}
-                offset={-100} // Adjust this offset based on your layout
-                className=""
-              >
-                <p className="block py-2 px-3 cursor-pointer text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
+              </li>
+              <li>
+                <a href="/about" className="block py-3 px-3 ">
                   About
-                </p>
-              </ScrollLink>
-            </li>
-            <li>
-              <ScrollLink
-                to="sectionThree" // This should match the ID of the element you want to scroll to
-                smooth={true}
-                duration={600}
-                offset={-100} // Adjust this offset based on your layout
-                className=""
-              >
-                <p className="block py-2 px-3 cursor-pointer text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
-                  How to Buy
-                </p>
-              </ScrollLink>
-            </li>
-            <li>
-              <ScrollLink
-                to="Tokenomics" // This should match the ID of the element you want to scroll to
-                smooth={true}
-                duration={600}
-                offset={-100} // Adjust this offset based on your layout
-                className=""
-              >
-                <p className="block py-2 px-3 cursor-pointer text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
-                  Tokenomics
-                </p>
-              </ScrollLink>
-            </li>
-            <li>
-              <ScrollLink
-                to="roadmap" // This should match the ID of the element you want to scroll to
-                smooth={true}
-                duration={600}
-                offset={-100} // Adjust this offset based on your layout
-                className=""
-              >
-                <p className="block py-2 px-3 cursor-pointer text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
-                  Road Map
-                </p>
-              </ScrollLink>
-            </li>
-            <li>
-              <Link href="/trade" legacyBehavior>
-                <a className="block py-2 px-3 text-gray-600 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#0079ac] md:p-0 md:lighthover:text-[#0079ac] lighttext-white lighthover:bg-gray-700 lighthover:text-white md:lighthover:bg-transparent lightborder-gray-700">
-                  {web3Provider == null ? (
-                    <button className="" onClick={connectWallet}>
-                    Connect Wallet
-                    </button>
-                  ) : (
-                    <div>
-                      <p>Connected</p>
-                    </div>
-                  )}
                 </a>
-             
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-      {/* <div className="flex justify-center items-center min-h-screen">
-        <div className="max-w-[720px] mx-auto">
-          <div className="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
-            <a
-              target="_blank"
-              href="https://www.material-tailwind.com/docs/html/card"
-              className="block w-full px-4 py-2 text-center text-slate-700 transition-all"
-            >
-              Buy Your own <b>Gonzo Token</b>.
-            </a>
+              </li>
+              <li>
+                <a href="/" className="block py-3 px-3   ">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="/" className="block py-3 px-3    ">
+                  Contact
+                </a>
+              </li>
+            </ul>
           </div>
-          <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-96 rounded-xl bg-clip-border">
-            <div className="relative grid mx-4 mb-4 -mt-6 overflow-hidden text-white shadow-lg h-28 place-items-center rounded-xl bg-gradient-to-tr from-gray-900 to-gray-800 bg-clip-border shadow-gray-900/20 z-10 absolute">
-              <h3 className="block text-3xl antialiased font-semibold leading-snug tracking-wider text-[#0079ac] font-custom2 hover:font-custom mb-14">
-                YOUR AMOUNT
-              </h3>
-            </div>
-            <Image
-              src={gonzoToken}
-              className="z-20 relative -mt-20 ml-32 mr-auto hover:scale-110"
-              width={140}
-              height={140}
-              alt=""
-            />
-            <p className="text-center font-custom  text-[#0079ac]">
-              <span>$Gonzo</span>
-            </p>
+        </div>
+      </nav>
 
-            <div className="flex flex-col gap-4 p-6">
-              <div className="relative h-11 w-full min-w-[200px]">
-                <input
-                  className="w-full h-full px-3 py-3 font-sans text-sm font-normal transition-all bg-transparent border rounded-md peer border-blue-gray-200 border-t-transparent text-blue-gray-700 outline outline-0 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                  placeholder=" "
-                  type="number"
-                />
-                <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                  $USDT
+      <section>
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="max-w-[720px] mx-auto">
+            {/* <h1 className="text-white"> Web3Modal connection</h1> */}
+            <div className="text-white">
+              {" "}
+              {web3Provider == null ? (
+                <button className="" onClick={connectWallet}>
+                  connect Wallet{" "}
+                </button>
+              ) : (
+                <div>
+                  {/* <p>Connected</p> */}
+                  <p>Address : {walletAddress}</p>
+                </div>
+              )}
+            </div>
+            <div className="block mb-4 mx-auto border-b border-slate-300 pb-2 max-w-[360px]">
+              <a
+                target="_blank"
+                href="https://www.material-tailwind.com/docs/html/card"
+                className="block w-full px-4 py-2 text-center text-white transition-all"
+              >
+                Buy Your Own <b>Gentop Token</b>.
+              </a>
+            </div>
+            <h1 className="text-white ml-5">
+              {usdtBalance !== null && <p>USDT Balance: {usdtBalance} USDT</p>}
+            </h1>
+            <div className="relative flex flex-col text-gray-700 bg-[#14000b] shadow-md w-96 rounded-xl bg-clip-border">
+              <div className="max-w-md mx-auto bg-[#14000b] p-6 rounded-lg shadow-lg">
+                <label
+                  htmlFor="usdt"
+                  className="block text-sm font-medium text-white"
+                >
+                  Enter USDT
                 </label>
+                <input
+                  type="number"
+                  onChange={(e) => setUsdtAmount(e.target.value)}
+                  className="mt-2 block  px-2 py-2 border text-[#14000b] w-96 border-gray-300 rounded-md focus:outline-none focus:ring-[#14000b] focus:border-[#14000b]"
+                  placeholder="Enter amount in USDT"
+                />
+
+                <label
+                  htmlFor="stacking"
+                  className="mt-4 block text-sm font-medium text-white"
+                >
+                  Select Stacking Option
+                </label>
+                <select
+                  id="stacking"
+                  value={selectedOption}
+                  className="mt-2 block w-full px-3 py-2 border text-center  text-[#14000b] font-bold border-white rounded-md focus:outline-none focus:ring-[#14000b] focus:border-[#14000b]"
+                  onChange={(e) => setSelectedOption(e.target.value)}
+                >
+                  Bronze <option value="1">Bronze</option>
+                  Silver <option value="2">Silver</option>
+                  Gold <option value="3">Gold</option>
+                </select>
+
+                <button
+                  onClick={approveUSDT}
+                  className="mt-6 w-full bg-white text-[#14000b] font-bold py-2 px-4 rounded-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+                >
+                  Approve
+                </button>
+
+                <button
+                  onClick={buyTokens}
+                  className="mt-4 w-full bg-white text-[#14000b] font-bold py-3 px-4 rounded-md hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+                >
+                  Buy
+                </button>
+                <div>
+                  {selectedOption === "1" && (
+                    <p className="text-white">120 Days Stacking</p>
+                  )}
+                  {selectedOption === "2" && (
+                    <p className="text-white">90 Days Stacking</p>
+                  )}
+                  {selectedOption === "3" && (
+                    <p className="text-white">45 Days Stacking</p>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="p-6 pt-0">
-              <button
-                className="block w-full select-none rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-              >
-                Buy
-              </button>
-            </div>
           </div>
         </div>
-      </div> */}
-      <div className="flex justify-center items-center min-h-screen">
-        <h1 className="text-7xl"> Coming Soon</h1>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
