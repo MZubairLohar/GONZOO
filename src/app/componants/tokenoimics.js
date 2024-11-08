@@ -2,20 +2,20 @@ import React from "react";
 
 function tokenommics() {
   return (
-    <div id="Tokenomics" className="grid lg:mt-20 bg-white border-t-4 border-double border-black place-items-center font-custom tracking-widest">
-      <div className=" mt-20 text-7xl text-[#0079ac]">TOKENOMICS</div>
+    <div id="Tokenomics" className="grid lg:mt-20 bg-[#6c83d6] border-t-4 border-double border-black place-items-center font-custom tracking-widest">
+      <div className=" mt-20 text-7xl tracking-wide text-white">TOKENOMICS</div>
       <div className=" grid grid-rows-1 area place-content-center my-10 items-center">
         {/* Creat wallet */}
-        <div className="m-4  mx-auto bg-white rounded-xl  shadow-md overflow-hidden md:max-w-5xl">
+        <div className="m-4  mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-5xl">
           <div className="md:flex">
             <div className="p-8 md:flex-1">
-              <p className="uppercase tracking-wider text-4xl text-black font-semibold font-custom2">
+              <p className="uppercase tracking-wider text-center text-4xl text-black font-semibold font-custom2">
                 Token Supply
               </p>
-              <p className="block mt-1 text-xl leading-tight font-bold text-[#919ac9] ">
+              <p className="block mt-5 text-xl leading-tight text-center font-bold text-[#919ac9] ">
                 2,000,000,000
               </p>
-              <p className="mt-10 p-4 font-sans border-4 text rounded-tr-[40px] rounded-bl-[40px] text-black">
+              <p className="mt-10 p-4 font-sans border-4 text bg-[#6c83d6] text-white rounded-tr-[40px] rounded-bl-[40px] text-black">
                 No Taxes, No scamming peoples Transactions 
               </p>
             </div>

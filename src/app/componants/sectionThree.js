@@ -3,9 +3,9 @@ export default function SectionThree() {
   return (
     <div
       id="sectionThree"
-      className="grid lg:mt-20 bg-white border-t-4 border-double border-black place-items-center font-custom tracking-widest -mb-72 pb-10"
+      className="grid lg:mt-20 bg-[#6c83d6] border-t-4 border-double border-black place-items-center font-custom tracking-widest -mb-72 pb-10"
     >
-      <div className=" mt-20 text-7xl text-[#0079ac]">How to Buy!</div>
+      <div className=" mt-20 text-7xl text-white tracking-wide">How to Buy!</div>
       <div className=" grid grid-rows-4 area place-content-center my-10 items-center">
         {/* Creat wallet */}
         <div className="m-4 max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">

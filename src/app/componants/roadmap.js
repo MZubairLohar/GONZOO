@@ -2,7 +2,7 @@ import React from "react";
 
 export default function roadmap() {
   return (
-    <div id="roadmap" className="grid lg:mt-20 bg-white border-t-4 border-double border-black place-items-center font-custom tracking-widest">
+    <div id="roadmap" className="grid lg:mt-20 bg-[#6c83d6] border-t-4 border-double border-black place-items-center font-custom tracking-widest">
       <div className=" mt-20 text-7xl text-[#0079ac]">ROADMAP</div>
       <div className=" grid grid-cols-3   place-content-center my-10 items-center">
         {/* Creat wallet */}
@@ -37,19 +37,13 @@ export default function roadmap() {
         <div className="m-4 p-20 mx-auto bg-white rounded-xl shadow-md overflow-hidden max-w-5xl">
           <div className="md:flex">
             <div className="p-8">
-              <div className="uppercase tracking-wider text-3xl text-black font-semibold font-custom2">
+              <p className="mt-2 font-sans tracking-wider text-center text-black font-semibold ">
                 Phase 1: Meme
-              </div>
-              {/* <a
-                href="#"
-                className="block mt-1 text-lg leading-tight font-medium text-[#919ac9] hover:underline"
-              >
-                Phase 2: Vibe and HODL
-              </a> */}
-              <p className="mt-2 font-sans text-black">
+              </p>
+              <p className="mt-2 font-sans tracking-wider text-center text-black font-semibold">
                 Phase 2: Vibe and HODL
               </p>
-              <p className="mt-2 font-sans text-black">
+              <p className="mt-2 font-sans tracking-wider text-center text-black font-semibold">
                 Phase 3: Meme Takeover
               </p>
             </div>

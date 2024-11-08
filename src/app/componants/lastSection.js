@@ -2,7 +2,7 @@ import React from "react";
 
 export default function lastSection() {
   return (
-    <div className="grid lg:mt-20 border-t-4 bg-white border-double border-black place-items-center font-custom tracking-widest">
+    <div className="grid lg:mt-20 border-t-4 bg-[#6c83d6] border-double border-black place-items-center font-custom tracking-widest">
       <div className=" mt-20  flex gap-4 text-[#0079ac]">
         {" "}
         <div>
@@ -38,8 +38,8 @@ export default function lastSection() {
               <p className="uppercase tracking-wider text-2xl text-black font-semibold font-custom2">
                 Gonzo coin has no association with David Goetz , Jim Henson & Jerry Juhl or his creation
                 Gonzo. 
-                //   This token is simply paying homage to a meme we
-                // all love and recognize.
+                This token is simply paying homage to a meme we
+                all love and recognize.
               </p>
               <p className=" mt-4 uppercase tracking-wider text-2xl text-black font-semibold font-custom2">
                 Gonzo is a meme coin with no intrinsic value or expectation of

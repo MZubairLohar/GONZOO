@@ -37,18 +37,18 @@ export default function Hero() {
   };
   return (
     <div>
-      <section className="px-2 py-32 bg-white md:px-0 border-b-4 border-double border-black font-custom">
+      <section className="px-2 py-32 bg-[#6c83d6] md:px-0 border-b-4 border-double border-black font-custom">
         <div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
           <div className="flex flex-wrap items-center sm:-mx-3">
             <div className="w-full md:w-1/2 md:px-3">
               <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
                 <h1 className="text-4xl font-extrabold tracking-wide text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
-                  <span className="block xl:inline font-custom font-normal tracking-wider text-[#0a6999]">
+                  <span className="block tracking-wide xl:inline text-[#0a6999]">
                     Gonzo
                   </span>
                   {/* <span className="block xl:inline text-gray-600">'s</span> */}
 
-                  <span className="block text-[#919ac9] tracking-wide xl:inline">
+                  <span className="block text-white tracking-wide xl:inline">
                     Treasure{" "}
                   </span>
                 </h1>
@@ -61,7 +61,7 @@ export default function Hero() {
                 <div className="relative flex flex-col sm:flex-row sm:space-x-4">
                   <a
                     href="#_"
-                    className="flex items-center w-full px-6 py-3 mb-3 text-lg text-white tracking-wide bg-[#0a6999] rounded-md sm:mb-0 hover:bg-[#818dc7] sm:w-auto"
+                    className="flex items-center w-full px-6 py-3 mb-3 text-lg text-white tracking-wide bg-[#0a6999]  rounded-md sm:mb-0 hover:bg-[#818dc7] sm:w-auto"
                   >
                     How To Buy
                     <svg
@@ -103,7 +103,7 @@ export default function Hero() {
                 {/* <img src="https://getdrawings.com/cliparts/the-muppets-clipart-26.gif" className=" relative flex h-full w-full select-none items-center z-20"/> */}
               </div>
               <div
-                className="w-full h-auto overflow-hidden  relative bg-transparent transition-[all_400ms_cubic-bezier(0.03,0.98,0.52,0.99)_0s] will-change-transform "
+                className="w-full h-auto overflow-hidden drop-shadow-2xl relative bg-transparent transition-[all_400ms_cubic-bezier(0.03,0.98,0.52,0.99)_0s] will-change-transform "
                 onMouseMove={onMouseMove}
                 onMouseLeave={onMouseLeave}
                 style={{
