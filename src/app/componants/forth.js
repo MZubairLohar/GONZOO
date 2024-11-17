@@ -1,9 +1,9 @@
 import React from "react";
 
-function tokenommics() {
+function Forth() {
   return (
-    <div id="Tokenomics" className="grid lg:mt-20 bg-[#6c83d6] border-t-4 border-double border-black place-items-center font-custom tracking-widest">
-      <div className=" mt-20 text-7xl tracking-wide text-white">TOKENOMICS</div>
+    <div id="Tokenomics" className="grid mt-6 bg-[#6c83d6]  place-items-center font-custom tracking-widest">
+      <div className="  text-7xl tracking-wide text-white">TOKENOMICS</div>
       <div className=" grid grid-rows-1 area place-content-center my-10 items-center">
         {/* Creat wallet */}
         <div className="m-4  mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-5xl">
@@ -34,4 +34,4 @@ function tokenommics() {
   );
 }
 
-export default tokenommics;
+export default Forth;

@@ -2,7 +2,7 @@ import React from "react";
 
 export default function roadmap() {
   return (
-    <div id="roadmap" className="grid lg:mt-20 bg-[#6c83d6] border-t-4 border-double border-black place-items-center font-custom tracking-widest">
+    <div id="roadmap" className="grid  bg-[#6c83d6] place-items-center font-custom tracking-widest">
       <div className=" mt-20 text-7xl text-[#0079ac]">ROADMAP</div>
       <div className=" grid grid-cols-3   place-content-center my-10 items-center">
         {/* Creat wallet */}
